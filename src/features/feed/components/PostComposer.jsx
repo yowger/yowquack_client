@@ -1,14 +1,13 @@
 import { useState, useRef } from "react"
 import Box from "@mui/material/Box"
-import Paper from "@mui/material/Paper"
 import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
 import Typography from "@mui/material/Typography"
 import IconButton from "@mui/material/IconButton"
-import CloseIcon from "@mui/icons-material/Close"
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto"
 import EmojiMenu from "../../../components/post/EmojiMenu"
 import StyledPaper from "../../../components/common/StyledPaper"
+import PreviewImage from "../../../components/form/PreviewImage"
 
 const PostComposer = () => {
     const [postContent, setPostContent] = useState("")
@@ -50,8 +49,6 @@ const PostComposer = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        // Handle post submission logic here
-        // Include postContent and attachedImage in the form data
     }
 
     const characterCount = postContent.length
@@ -84,44 +81,11 @@ const PostComposer = () => {
                         {charactersRemaining} characters remaining
                     </Typography>
 
-                    {attachedImage && (
-                        <Box
-                            sx={{
-                                marginTop: 2,
-                                position: "relative",
-                                maxHeight: "39.9ch",
-                                overflow: "hidden",
-                            }}
-                        >
-                            <img
-                                src={imagePreview}
-                                alt="Attached Image Preview"
-                                style={{
-                                    width: "100%",
-                                    height: "auto",
-                                    marginBottom: "0.5rem",
-                                }}
-                            />
-
-                            <IconButton
-                                aria-label="Remove"
-                                size="small"
-                                sx={{
-                                    position: "absolute",
-                                    top: 5,
-                                    right: 5,
-                                    color: "#ffffff",
-                                    backgroundColor: "#333333",
-                                    "&:hover": {
-                                        backgroundColor: "#666666",
-                                    },
-                                }}
-                                onClick={handleRemoveImage}
-                            >
-                                <CloseIcon fontSize="small" />
-                            </IconButton>
-                        </Box>
-                    )}
+                    <PreviewImage
+                        src={imagePreview}
+                        onClickRemove={handleRemoveImage}
+                        sx={{ width: 220 }}
+                    />
 
                     <input
                         type="file"
@@ -155,6 +119,9 @@ const PostComposer = () => {
                             color="primary"
                             type="submit"
                             disabled={charactersRemaining < 0}
+                            sx={{
+                                alignSelf: "flex-center",
+                            }}
                         >
                             Post
                         </Button>

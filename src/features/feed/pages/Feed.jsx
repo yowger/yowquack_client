@@ -1,10 +1,13 @@
-import { Grid } from "@mui/material"
+import { useTheme } from "@mui/material/styles"
+import useMediaQuery from "@mui/material/useMediaQuery"
+import { Grid, Typography } from "@mui/material"
 import Header from "../components/Header"
 import PostComposer from "../components/PostComposer"
 import Box from "@mui/material/Box"
 import Container from "@mui/material/Container"
 import Toolbar from "@mui/material/Toolbar"
 import Post from "../../../components/post/Post"
+import Sidebar from "../../../components/sidebar/Sidebar"
 
 const posts = [
     {
@@ -110,39 +113,66 @@ const posts = [
 ]
 
 function Feed() {
+    const theme = useTheme()
+    const isMediumScreenAndBelow = useMediaQuery(theme.breakpoints.down("md"))
+
     return (
         <Container maxWidth="lg">
             <Header />
-            <Box component="main">
-                <Toolbar />
 
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 3,
-                        maxWidth: "65ch",
-                        padding: 2,
-                    }}
+            <Toolbar />
+
+            <Grid container sx={{ mt: 1 }}>
+                <Grid item xs={12} md={8}>
+                    <Box
+                        component="main"
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 3,
+                            maxWidth: "65ch",
+                            padding: 2,
+                        }}
+                    >
+                        <PostComposer />
+
+                        {posts.map((post) => (
+                            <Post
+                                key={post.id}
+                                author={post.author}
+                                content={post.content}
+                                image={post.image}
+                                comments={post.comments}
+                                totalComments={post.totalComments}
+                                maxCommentPreview={1}
+                                reactions={post.reactions}
+                            />
+                        ))}
+                    </Box>
+                </Grid>
+
+                <Grid
+                    item
+                    md={4}
+                    sx={{ display: isMediumScreenAndBelow && "none" }}
                 >
-                    <PostComposer />
-
-                    {posts.map((post) => (
-                        <Post
-                            key={post.id}
-                            author={post.author}
-                            content={post.content}
-                            image={post.image}
-                            comments={post.comments}
-                            totalComments={post.totalComments}
-                            maxCommentPreview={1}
-                            reactions={post.reactions}
-                        />
-                    ))}
-                </Box>
-
-                <Grid></Grid>
-            </Box>
+                    <Box
+                        sx={{
+                            padding: 2,
+                        }}
+                    >
+                        Aliquip aliquip magna consectetur exercitation est.
+                        Adipisicing aliqua enim fugiat mollit. Exercitation
+                        occaecat dolor non elit anim exercitation laboris ad qui
+                        duis occaecat sit et elit. Nisi ea duis duis ut ipsum.
+                        Adipisicing aute nisi minim velit eiusmod qui consequat
+                        culpa duis excepteur minim do nulla. Id sit et
+                        consectetur deserunt. Ullamco in minim reprehenderit
+                        officia nisi id dolore pariatur ex amet eiusmod
+                        consectetur fugiat.
+                    </Box>
+                </Grid>
+            </Grid>
         </Container>
     )
 }

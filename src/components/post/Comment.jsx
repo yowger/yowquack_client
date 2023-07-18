@@ -35,8 +35,7 @@ const Comment = ({ author, content, image }) => {
         <Box
             sx={{
                 display: "flex",
-                px: 2,
-                pb: 1,
+                mb: 1,
                 width: "100%",
             }}
         >

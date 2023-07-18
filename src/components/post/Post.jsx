@@ -20,6 +20,8 @@ import StyledPaper from "../common/StyledPaper"
 import ReactionMenu from "./ReactionMenu"
 import Comment from "./Comment"
 import Reactions from "./Reactions"
+import { TextField } from "@mui/material"
+import EmojiMenu from "./EmojiMenu"
 
 const Post = ({
     author,
@@ -30,7 +32,6 @@ const Post = ({
     reactions,
 }) => {
     const [menuAnchorEl, setMenuAnchorEl] = useState(null)
-    console.log("comment length ", comments?.length)
 
     const handleMoreOptionsClick = (event) => {
         setMenuAnchorEl(event.currentTarget)
@@ -176,22 +177,58 @@ const Post = ({
                 </Button>
             </Box>
 
-            {comments && <Divider sx={{ mb: 2 }} />}
+            {comments && <Divider />}
 
-            {comments?.map((comment) => (
-                <Comment
-                    key={comment.id}
-                    author={comment.author}
-                    content={comment.content}
-                    image={comment.image}
+            {/* add comment */}
+            {/* <Box
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    px: 2,
+                    mt: 1,
+                }}
+            >
+                <TextField
+                    sx={{ mb: 1 }}
+                    fullWidth
+                    variant="outlined"
+                    placeholder="Add a comment"
                 />
-            ))}
+                <Box sx={{ display: "flex" }}>
+                    <EmojiMenu
+                    // onSelect={handleEmojiSelect}
+                    />
+                    <Box sx={{ flexGrow: 1 }} />
 
-            {comments?.length < totalComments && (
-                <Box sx={{ px: 2, py: 1, cursor: "pointer" }}>
-                    <Link variant="mediumText" underline="hover">
-                        View More Comments
-                    </Link>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        // onClick={handleAddComment}
+                    >
+                        Comment
+                    </Button>
+                </Box>
+            </Box> */}
+            {/* add comment end */}
+
+            {comments && (
+                <Box sx={{ px: 2, mt: 2 }}>
+                    {comments.map((comment) => (
+                        <Comment
+                            key={comment.id}
+                            author={comment.author}
+                            content={comment.content}
+                            image={comment.image}
+                        />
+                    ))}
+
+                    {comments.length < totalComments && (
+                        <Box sx={{ px: 2, py: 1, cursor: "pointer" }}>
+                            <Link variant="mediumText" underline="hover">
+                                View More Comments
+                            </Link>
+                        </Box>
+                    )}
                 </Box>
             )}
         </StyledPaper>
@@ -218,11 +255,11 @@ Post.propTypes = {
     ),
     totalComments: PropTypes.number.isRequired,
     reactions: PropTypes.shape({
-        like: PropTypes.number.isRequired,
-        haha: PropTypes.number.isRequired,
-        wow: PropTypes.number.isRequired,
-        sad: PropTypes.number.isRequired,
-        angry: PropTypes.number.isRequired,
+        like: PropTypes.number,
+        haha: PropTypes.number,
+        wow: PropTypes.number,
+        sad: PropTypes.number,
+        angry: PropTypes.number,
     }),
 }
 

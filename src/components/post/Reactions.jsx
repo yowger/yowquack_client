@@ -31,12 +31,12 @@ const Reactions = ({ reactions }) => {
 
 Reactions.propTypes = {
     reactions: PropTypes.shape({
-        like: PropTypes.number.isRequired,
-        haha: PropTypes.number.isRequired,
-        wow: PropTypes.number.isRequired,
-        sad: PropTypes.number.isRequired,
-        angry: PropTypes.number.isRequired,
-    }).isRequired,
+        like: PropTypes.number,
+        haha: PropTypes.number,
+        wow: PropTypes.number,
+        sad: PropTypes.number,
+        angry: PropTypes.number,
+    }),
 }
 
 export default Reactions
