@@ -1,5 +1,6 @@
 # yowquack_client
 front end of yowquack
+social media site, using the mern stack. 
 
 early development images
 
