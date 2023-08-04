@@ -6,13 +6,21 @@ import Popover from "@mui/material/Popover"
 import Typography from "@mui/material/Typography"
 
 const StyledTypography = (props) => (
-    <Typography variant="body2" sx={{ fontSize: 16 }}>
+    <Typography variant="body2" sx={{ fontSize: 18 }}>
         {props.children}
     </Typography>
 )
 
 const ReactionMenu = ({ onClick, renderButton }) => {
     const [anchorEl, setAnchorEl] = useState(null)
+
+    const reactions = [
+        { type: "like", emoji: "❤️" },
+        { type: "haha", emoji: "😆" },
+        { type: "wow", emoji: "😲" },
+        { type: "sad", emoji: "😢" },
+        { type: "angry", emoji: "😠" },
+    ]
 
     const handleReactionClick = (reaction) => {
         onClick(reaction)
@@ -50,21 +58,14 @@ const ReactionMenu = ({ onClick, renderButton }) => {
                 sx={{ display: "flex" }}
             >
                 <Box sx={{ display: "flex" }}>
-                    <Button onClick={() => handleReactionClick("❤️")}>
-                        <StyledTypography>❤️</StyledTypography>
-                    </Button>
-                    <Button onClick={() => handleReactionClick("😆")}>
-                        <StyledTypography>😆</StyledTypography>
-                    </Button>
-                    <Button onClick={() => handleReactionClick("😲")}>
-                        <StyledTypography>😲</StyledTypography>
-                    </Button>
-                    <Button onClick={() => handleReactionClick("😢")}>
-                        <StyledTypography>😢</StyledTypography>
-                    </Button>
-                    <Button onClick={() => handleReactionClick("😠")}>
-                        <StyledTypography>😠</StyledTypography>
-                    </Button>
+                    {reactions.map(({ type, emoji }) => (
+                        <Button
+                            key={type}
+                            onClick={() => handleReactionClick({ type })}
+                        >
+                            <StyledTypography>{emoji}</StyledTypography>
+                        </Button>
+                    ))}
                 </Box>
             </Popover>
         </>

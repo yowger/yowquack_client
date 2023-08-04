@@ -1,14 +1,22 @@
 import { Routes, Route } from "react-router-dom"
-import SignIn from "./features/auth/pages/SignIn"
-import Home from "./features/home/pages/Home"
+import Login from "./features/auth/pages/Login"
 import Feed from "./features/feed/pages/Feed"
+import SocialLayout from "./components/layouts/social/SocialLayout"
+import Profile from "./features/profile/pages/Profile"
+import SinglePost from "./features/feed/pages/SinglePost"
+import Register from "./features/auth/pages/Register"
 
 function App() {
     return (
         <Routes>
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/" element={<Feed />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/Register" element={<Register />} />
+
+            <Route element={<SocialLayout />}>
+                <Route path="/" element={<Feed />} />
+                <Route path="/post" element={<SinglePost />} />
+                <Route path="/profile" element={<Profile />} />
+            </Route>
             {/* <Route path="/signin" element={<SignIn />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signin" element={<SignIn />} /> */}

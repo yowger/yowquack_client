@@ -1,5 +1,6 @@
 import { useState } from "react"
-import SearchInput from "./SearchInput"
+import { useNavigate, Link } from "react-router-dom"
+import SearchInput from "../../form/SearchInput"
 import PropTypes from "prop-types"
 import AppBar from "@mui/material/AppBar"
 import Box from "@mui/material/Box"
@@ -24,9 +25,9 @@ import NotificationsIcon from "@mui/icons-material/Notifications"
 
 const drawerWidth = 240
 const navItems = ["Home", "About", "Contact"]
-const settings = ["Profile", "Logout"]
 
 function Header(props) {
+    const navigate = useNavigate()
     const { window } = props
 
     const [mobileOpen, setMobileOpen] = useState(false)
@@ -34,24 +35,28 @@ function Header(props) {
         setMobileOpen((prevState) => !prevState)
     }
 
-    const [anchorElNav, setAnchorElNav] = useState(null)
     const [anchorElUser, setAnchorElUser] = useState(null)
-
-    const handleOpenNavMenu = (event) => {
-        setAnchorElNav(event.currentTarget)
-    }
 
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget)
     }
 
-    const handleCloseNavMenu = () => {
-        setAnchorElNav(null)
-    }
-
     const handleCloseUserMenu = () => {
         setAnchorElUser(null)
     }
+
+    const handleClickProfileItem = () => {
+        navigate("/profile")
+    }
+
+    const handleClickLogOutItem = () => {
+        console.log("clicked log out item")
+    }
+
+    const settings = [
+        { label: "Profile", event: handleClickProfileItem },
+        { label: "Log out", event: handleClickLogOutItem },
+    ]
 
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
@@ -89,18 +94,23 @@ function Header(props) {
                             <MenuIcon />
                         </IconButton>
 
-                        <Typography
-                            variant="h6"
-                            component="div"
-                            sx={{
-                                display: {
-                                    xs: "none",
-                                    sm: "block",
-                                },
-                            }}
+                        <Link
+                            to="/"
+                            style={{ textDecoration: "none", color: "unset" }}
                         >
-                            QUACK
-                        </Typography>
+                            <Typography
+                                variant="h6"
+                                component="div"
+                                sx={{
+                                    display: {
+                                        xs: "none",
+                                        sm: "block",
+                                    },
+                                }}
+                            >
+                                QUACK
+                            </Typography>
+                        </Link>
 
                         {/* search icon start */}
                         <SearchInput />
@@ -157,13 +167,13 @@ function Header(props) {
                                 open={Boolean(anchorElUser)}
                                 onClose={handleCloseUserMenu}
                             >
-                                {settings.map((setting) => (
+                                {settings.map((setting, index) => (
                                     <MenuItem
-                                        key={setting}
-                                        onClick={handleCloseUserMenu}
+                                        key={index}
+                                        onClick={setting.event}
                                     >
                                         <Typography textAlign="center">
-                                            {setting}
+                                            {setting.label}
                                         </Typography>
                                     </MenuItem>
                                 ))}
@@ -179,7 +189,7 @@ function Header(props) {
                     open={mobileOpen}
                     onClose={handleDrawerToggle}
                     ModalProps={{
-                        keepMounted: true, // Better open performance on mobile.
+                        keepMounted: true,
                     }}
                     sx={{
                         display: { xs: "block", sm: "none" },

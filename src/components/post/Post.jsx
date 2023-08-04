@@ -1,299 +1,225 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import Box from "@mui/material/Box"
-import Typography from "@mui/material/Typography"
-import Avatar from "@mui/material/Avatar"
-import Link from "@mui/material/Link"
-import Button from "@mui/material/Button"
-import IconButton from "@mui/material/IconButton"
-import Menu from "@mui/material/Menu"
-import MenuItem from "@mui/material/MenuItem"
-import ListItemIcon from "@mui/material/ListItemIcon"
-import ListItemText from "@mui/material/ListItemText"
-import MoreVertIcon from "@mui/icons-material/MoreVert"
-import EditIcon from "@mui/icons-material/Edit"
-import DeleteIcon from "@mui/icons-material/Delete"
 import Divider from "@mui/material/Divider"
-import FavoriteIcon from "@mui/icons-material/Favorite"
-import ChatBubbleIcon from "@mui/icons-material/ChatBubble"
 import StyledPaper from "../common/StyledPaper"
-import ReactionMenu from "./ReactionMenu"
-import Comment from "./Comment"
-import Reactions from "./Reactions"
-import { TextField } from "@mui/material"
-import EmojiMenu from "./EmojiMenu"
+import CommentBox from "../posts/CommentBox"
+import PostHeader from "./PostHeader"
+import PostFooter from "./PostFooter"
+import PostContent from "./PostImage"
+import PostActions from "./PostActions"
+import PostCommentPreview from "./PostCommentsPreview"
+import PostMenu from "./PostMenu"
+import PostDialog from "./PostDialog"
+import {
+    useAddCommentMutation,
+    useAddReactionMutation,
+    useDeletePostMutation,
+} from "../../features/feed/slices/postApiSlice"
 
 const Post = ({
+    id,
     author,
     content,
     image,
     comments,
     totalComments,
     reactions,
+    createdAt,
 }) => {
+    const { name, avatar } = author
+    const { url: avatarUrl } = avatar || {}
+    const { url: postImageUrl } = image || {}
     const [menuAnchorEl, setMenuAnchorEl] = useState(null)
+    const [showCommentBox, setShowCommentBox] = useState(false)
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
 
-    const handleMoreOptionsClick = (event) => {
+    const [
+        addComment,
+        {
+            isLoading: addCommentIsLoading,
+            isSuccess: addCommentIsSuccess,
+            // isError: addCommentIsError,
+            // error: addCommentError,
+        },
+    ] = useAddCommentMutation()
+
+    const [
+        deletePost,
+        {
+            // isLoading: deletePostIsLoading,
+            isSuccess: deletePostIsSuccess,
+            // isError: deletePostIsError,
+            // error: deletePostError,
+        },
+    ] = useDeletePostMutation()
+
+    const [
+        addReaction,
+        // {
+        //     isLoading: addReactionIsLoading,
+        //     isSuccess: addReactionIsSuccess,
+        //     isError: addReactionIsError,
+        //     error: addReactionError,
+        // },
+    ] = useAddReactionMutation()
+
+    function handleMoreOptionsClick(event) {
         setMenuAnchorEl(event.currentTarget)
     }
 
-    const handleEditPost = () => {
+    // function handleEditPost() {
+    //     setMenuAnchorEl(null)
+    // }
+
+    function handleMenuItemDelete() {
+        setMenuAnchorEl(null)
+        setOpenDeleteDialog(true)
+    }
+
+    function handleCloseDeleteDialog() {
+        setOpenDeleteDialog(false)
+    }
+
+    function handleCloseOptionsMenu() {
         setMenuAnchorEl(null)
     }
 
-    const handleDeletePost = () => {
-        setMenuAnchorEl(null)
+    async function handleReactionClick(reaction) {
+        await addReaction({ id, reaction })
     }
 
-    const handleCloseOptionsMenu = () => {
-        setMenuAnchorEl(null)
+    function handleCommentClick() {
+        setShowCommentBox(true)
     }
 
-    const handleReactionClick = () => {
-        console.log("Reacted")
+    async function handleClickAddComment({ content, image }) {
+        if (!content && !image) return
+
+        const formData = new FormData()
+
+        formData.append("content", content)
+        formData.append("file", image)
+
+        await addComment({ id, formData }).unwrap()
     }
+
+    async function handleDeletePost() {
+        await deletePost(id)
+    }
+
+    useEffect(() => {
+        setOpenDeleteDialog(false)
+    }, [deletePostIsSuccess])
 
     return (
-        <StyledPaper
-            sx={{ marginBottom: (theme) => theme.spacing(2) }}
-            elevation={3}
-        >
-            <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 1,
-                    px: 2,
-                    pt: 2,
-                    pb: 1,
-                }}
+        <>
+            <StyledPaper
+                sx={{ marginBottom: (theme) => theme.spacing(2) }}
+                elevation={3}
             >
                 <Box
                     sx={{
                         display: "flex",
-                        alignItems: "center",
+                        flexDirection: "column",
+                        gap: 1,
+                        px: 2,
+                        pt: 2,
+                        pb: 1,
                     }}
                 >
-                    <Avatar
-                        sx={{ mr: 1 }}
-                        alt={author.name}
-                        src={author.avatarUrl}
+                    <PostHeader
+                        name={name}
+                        avatarUrl={avatarUrl}
+                        createdAt={createdAt}
+                        handleMoreOptionsClick={handleMoreOptionsClick}
                     />
 
-                    <Box sx={{ display: "flex", flexDirection: "column" }}>
-                        <Typography
-                            sx={{ fontWeight: 500 }}
-                            variant="body1"
-                            component="span"
-                        >
-                            {author.name}
-                        </Typography>
-                        <Typography
-                            sx={{ color: (theme) => theme.palette.grey[500] }}
-                            variant="body2"
-                            component="span"
-                        >
-                            1h ago
-                        </Typography>
-                    </Box>
+                    <PostContent content={content} imageUrl={postImageUrl} />
 
-                    <IconButton
-                        aria-label="More options"
-                        size="small"
-                        sx={{ marginLeft: "auto" }}
-                        onClick={handleMoreOptionsClick}
-                    >
-                        <MoreVertIcon />
-                    </IconButton>
-
-                    <Menu
-                        anchorEl={menuAnchorEl}
-                        open={Boolean(menuAnchorEl)}
-                        onClose={handleCloseOptionsMenu}
-                    >
-                        <MenuItem onClick={handleEditPost}>
-                            <ListItemIcon>
-                                <EditIcon fontSize="small" />
-                            </ListItemIcon>
-                            <ListItemText>Edit</ListItemText>
-                        </MenuItem>
-                        <MenuItem onClick={handleDeletePost}>
-                            <ListItemIcon>
-                                <DeleteIcon fontSize="small" />
-                            </ListItemIcon>
-                            <ListItemText>Delete</ListItemText>
-                        </MenuItem>
-                    </Menu>
-                </Box>
-
-                <Typography variant="body1">{content}</Typography>
-                {image && <img src={image} />}
-
-                <Box sx={{ display: "flex" }}>
-                    {reactions && <Reactions reactions={reactions} />}
-
-                    <Box sx={{ flexGrow: 1 }} />
-
-                    {totalComments > 0 && (
-                        <Typography
-                            variant="mediumText"
-                            sx={{ color: (theme) => theme.palette.grey[600] }}
-                        >
-                            {totalComments} comments
-                        </Typography>
-                    )}
-                </Box>
-            </Box>
-
-            <Divider />
-
-            <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "space-evenly",
-                    py: 0.5,
-                }}
-            >
-                <ReactionMenu
-                    onClick={handleReactionClick}
-                    renderButton={(props) => (
-                        <Button
-                            aria-label="reaction button"
-                            {...props}
-                            startIcon={<FavoriteIcon />}
-                            fullWidth
-                        >
-                            React
-                        </Button>
-                    )}
-                />
-
-                <Button
-                    aria-label="comment button"
-                    startIcon={<ChatBubbleIcon />}
-                    fullWidth
-                >
-                    Comment
-                </Button>
-            </Box>
-
-            {comments && <Divider />}
-
-            {/* add comment */}
-            {/* <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    px: 2,
-                    mt: 1,
-                }}
-            >
-                <TextField
-                    sx={{ mb: 1 }}
-                    fullWidth
-                    variant="outlined"
-                    placeholder="Add a comment"
-                />
-                <Box sx={{ display: "flex" }}>
-                    <EmojiMenu
-                    // onSelect={handleEmojiSelect}
+                    <PostFooter
+                        reactions={reactions}
+                        totalComments={totalComments}
                     />
-                    <Box sx={{ flexGrow: 1 }} />
-
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        // onClick={handleAddComment}
-                    >
-                        Comment
-                    </Button>
                 </Box>
-            </Box> */}
-            {/* add comment end */}
 
-            {comments && (
-                <Box sx={{ px: 2, mt: 2 }}>
-                    {comments.map((comment) => (
-                        <Comment
-                            key={comment.id}
-                            author={comment.author}
-                            content={comment.content}
-                            image={comment.image}
-                        />
-                    ))}
+                <Divider />
 
-                    {comments.length < totalComments && (
-                        <Box sx={{ px: 2, py: 1, cursor: "pointer" }}>
-                            <Link variant="mediumText" underline="hover">
-                                View More Comments
-                            </Link>
-                        </Box>
-                    )}
-                </Box>
-            )}
-        </StyledPaper>
+                <PostActions
+                    handleReactionClick={handleReactionClick}
+                    handleCommentClick={handleCommentClick}
+                />
+
+                {(comments?.length > 0 || showCommentBox) && <Divider />}
+
+                {showCommentBox && (
+                    <CommentBox
+                        onClick={handleClickAddComment}
+                        isLoading={addCommentIsLoading}
+                        isSuccess={addCommentIsSuccess}
+                    />
+                )}
+
+                <PostCommentPreview
+                    comments={comments}
+                    totalComments={totalComments}
+                />
+            </StyledPaper>
+
+            <PostMenu
+                anchorEl={menuAnchorEl}
+                open={Boolean(menuAnchorEl)}
+                onClose={handleCloseOptionsMenu}
+                onDeleteClick={handleMenuItemDelete}
+            />
+
+            <PostDialog
+                open={openDeleteDialog}
+                onClose={handleCloseDeleteDialog}
+                onConfirmDelete={handleDeletePost}
+                title={"Delete Post?"}
+                contentText={" Once deleted, it can no longer be recovered."}
+            />
+        </>
     )
 }
 
 Post.propTypes = {
+    id: PropTypes.string.isRequired,
     author: PropTypes.shape({
         name: PropTypes.string.isRequired,
-        avatarUrl: PropTypes.string.isRequired,
-    }).isRequired,
-    content: PropTypes.string.isRequired,
-    image: PropTypes.string,
+        avatar: PropTypes.shape({
+            url: PropTypes.string,
+        }),
+    }),
+    content: PropTypes.string,
+    image: PropTypes.shape({
+        url: PropTypes.string,
+    }),
     comments: PropTypes.arrayOf(
         PropTypes.shape({
-            id: PropTypes.number.isRequired,
-            author: PropTypes.shape({
+            _id: PropTypes.string.isRequired,
+            user: PropTypes.shape({
                 name: PropTypes.string.isRequired,
-                avatarUrl: PropTypes.string.isRequired,
-            }).isRequired,
+                avatar: PropTypes.shape({
+                    url: PropTypes.string,
+                }),
+            }),
             content: PropTypes.string.isRequired,
-            image: PropTypes.string,
+            image: PropTypes.shape({
+                url: PropTypes.string,
+            }),
+            createdAt: PropTypes.string.isRequired,
         })
     ),
     totalComments: PropTypes.number.isRequired,
-    reactions: PropTypes.shape({
-        like: PropTypes.number,
-        haha: PropTypes.number,
-        wow: PropTypes.number,
-        sad: PropTypes.number,
-        angry: PropTypes.number,
-    }),
+    reactions: PropTypes.arrayOf(
+        PropTypes.shape({
+            type: PropTypes.string.isRequired,
+            count: PropTypes.number.isRequired,
+        })
+    ),
+    createdAt: PropTypes.string.isRequired,
 }
 
 export default Post
-
-{
-    /* comment box start*/
-}
-{
-    /* <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                }}
-            >
-                <TextField
-                    sx={{}}
-                    fullWidth
-                    variant="outlined"
-                    placeholder="Add a comment"
-                    value={comment}
-                    onChange={handleCommentChange}
-                />
-                <Box>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        // onClick={handleAddComment}
-                    >
-                        Comment
-                    </Button>
-                </Box>
-            </Box> */
-}
-{
-    /* comment box end */
-}

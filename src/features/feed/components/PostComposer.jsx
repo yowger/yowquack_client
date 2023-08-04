@@ -1,18 +1,21 @@
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import Box from "@mui/material/Box"
 import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
 import Typography from "@mui/material/Typography"
 import IconButton from "@mui/material/IconButton"
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto"
-import EmojiMenu from "../../../components/post/EmojiMenu"
+import EmojiMenu from "../../../components/posts/EmojiMenu"
 import StyledPaper from "../../../components/common/StyledPaper"
 import PreviewImage from "../../../components/form/PreviewImage"
+import CircularProgress from "@mui/material/CircularProgress"
 
-const PostComposer = () => {
+// future# , useHook for reusability,
+function PostComposer({ onClick, isLoading, isSuccess }) {
     const [postContent, setPostContent] = useState("")
     const [attachedImage, setAttachedImage] = useState(null)
     const [imagePreview, setImagePreview] = useState(null)
+    const [displayError, setDisplayError] = useState(false)
     const fileInputRef = useRef(null)
 
     const handleContentChange = (e) => {
@@ -49,10 +52,27 @@ const PostComposer = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+
+        if (!postContent && !attachedImage) {
+            setDisplayError(true)
+
+            return
+        }
+
+        if (displayError) {
+            setDisplayError(false)
+        }
+
+        onClick({ content: postContent, image: attachedImage })
     }
 
     const characterCount = postContent.length
     const charactersRemaining = 280 - characterCount
+
+    useEffect(() => {
+        setPostContent("")
+        handleRemoveImage()
+    }, [isSuccess])
 
     return (
         <Box component="form" onSubmit={handleSubmit}>
@@ -63,29 +83,36 @@ const PostComposer = () => {
                         multiline
                         rows={4}
                         fullWidth
-                        required
                         value={postContent}
                         onChange={handleContentChange}
                         inputProps={{ maxLength: 280 }}
                     />
 
-                    <Typography
-                        variant="body2"
-                        color={
-                            charactersRemaining >= 0
-                                ? "text.secondary"
-                                : "error"
-                        }
-                        sx={{ mt: 1 }}
+                    <Box
+                        sx={{
+                            mt: 1,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                        }}
                     >
-                        {charactersRemaining} characters remaining
-                    </Typography>
+                        <Typography
+                            variant="body2"
+                            color={
+                                charactersRemaining >= 0
+                                    ? "text.secondary"
+                                    : "error"
+                            }
+                        >
+                            {charactersRemaining} characters remaining
+                        </Typography>
 
-                    <PreviewImage
-                        src={imagePreview}
-                        onClickRemove={handleRemoveImage}
-                        sx={{ width: 220 }}
-                    />
+                        {displayError && (
+                            <Typography variant="body2" color="error">
+                                A content or image is required.
+                            </Typography>
+                        )}
+                    </Box>
 
                     <input
                         type="file"
@@ -98,6 +125,7 @@ const PostComposer = () => {
                     <Box
                         sx={{
                             display: "flex",
+                            alignItems: "center",
                             marginTop: 2,
                         }}
                     >
@@ -114,18 +142,33 @@ const PostComposer = () => {
 
                         <Box sx={{ flexGrow: 1 }} />
 
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            type="submit"
-                            disabled={charactersRemaining < 0}
-                            sx={{
-                                alignSelf: "flex-center",
-                            }}
-                        >
-                            Post
-                        </Button>
+                        <Box>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                type="submit"
+                                disabled={charactersRemaining < 0 || isLoading}
+                            >
+                                {isLoading ? (
+                                    <>
+                                        <CircularProgress
+                                            sx={{ mr: 1 }}
+                                            size={16}
+                                        />
+                                        Posting...
+                                    </>
+                                ) : (
+                                    <>Post</>
+                                )}
+                            </Button>
+                        </Box>
                     </Box>
+
+                    <PreviewImage
+                        src={imagePreview}
+                        onClickRemove={handleRemoveImage}
+                        sx={{ width: 220 }}
+                    />
                 </Box>
             </StyledPaper>
         </Box>
