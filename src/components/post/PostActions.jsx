@@ -5,7 +5,11 @@ import FavoriteIcon from "@mui/icons-material/Favorite"
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble"
 import ReactionMenu from "../posts/ReactionMenu"
 
-const PostActions = ({ handleReactionClick, handleCommentClick }) => {
+const PostActions = ({
+    hasReacted,
+    handleReactionClick,
+    handleCommentClick,
+}) => {
     return (
         <Box
             sx={{
@@ -22,8 +26,9 @@ const PostActions = ({ handleReactionClick, handleCommentClick }) => {
                         {...props}
                         startIcon={<FavoriteIcon />}
                         fullWidth
+                        sx={{ color: hasReacted && "red" }}
                     >
-                        React
+                        {hasReacted ? "Reacted" : "React"}
                     </Button>
                 )}
             />

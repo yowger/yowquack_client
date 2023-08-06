@@ -28,7 +28,12 @@ const Reactions = ({ reactions }) => {
                             color: (theme) => theme.palette.grey[500],
                         }}
                     >
-                        {emoticons[type]} {count}
+                        <Typography
+                            sx={{ display: "inline", mr: 0.2, fontSize: 18 }}
+                        >
+                            {emoticons[type]}
+                        </Typography>
+                        {count}
                     </Typography>
                 ) : null
             })}

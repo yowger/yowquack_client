@@ -30,6 +30,7 @@ const Post = ({
     const { name, avatar } = author
     const { url: avatarUrl } = avatar || {}
     const { url: postImageUrl } = image || {}
+    const [hasReacted, setHasReacted] = useState(false)
     const [menuAnchorEl, setMenuAnchorEl] = useState(null)
     const [showCommentBox, setShowCommentBox] = useState(false)
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
@@ -87,6 +88,8 @@ const Post = ({
 
     async function handleReactionClick(reaction) {
         await addReaction({ id, reaction })
+
+        setHasReacted(true)
     }
 
     function handleCommentClick() {
@@ -146,6 +149,7 @@ const Post = ({
                 <Divider />
 
                 <PostActions
+                    hasReacted={hasReacted}
                     handleReactionClick={handleReactionClick}
                     handleCommentClick={handleCommentClick}
                 />
