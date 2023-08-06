@@ -91,7 +91,7 @@ function Login() {
                                 variant="outlined"
                                 sx={{ py: 1, mb: 1.5 }}
                             >
-                                Sign in as guest
+                                Continue as guest
                             </Button>
 
                             <Button
@@ -101,7 +101,7 @@ function Login() {
                                 sx={{ py: 1 }}
                                 startIcon={<GoogleIcon />}
                             >
-                                Sign in with Google
+                                Continue with Google
                             </Button>
 
                             <Typography

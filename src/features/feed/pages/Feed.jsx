@@ -61,6 +61,7 @@ function Feed() {
                     {isPostLoading ? (
                         <p>loading posts...</p>
                     ) : (
+                        postApiData &&
                         postApiData.data.posts.map((post, index) => {
                             return (
                                 <Post
