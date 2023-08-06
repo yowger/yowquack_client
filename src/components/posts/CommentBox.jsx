@@ -6,7 +6,7 @@ import {
     TextField,
     Typography,
 } from "@mui/material"
-import React, { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import EmojiPickerButton from "./EmojiMenu"
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto"
 import PreviewImage from "../form/PreviewImage"

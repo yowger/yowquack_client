@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom"
 import Container from "@mui/material/Container"
-import Header from "../social/Header"
+import Header from "../Header/Header"
 import Toolbar from "@mui/material/Toolbar"
 
 function SocialLayout() {

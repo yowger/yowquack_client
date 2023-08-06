@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
-import SearchInput from "../../form/SearchInput"
+import SearchInput from "../form/SearchInput"
 import PropTypes from "prop-types"
 import AppBar from "@mui/material/AppBar"
 import Box from "@mui/material/Box"
@@ -47,6 +47,7 @@ function Header(props) {
 
     const handleClickProfileItem = () => {
         navigate("/profile")
+        setAnchorElUser(null)
     }
 
     const handleClickLogOutItem = () => {
@@ -80,7 +81,7 @@ function Header(props) {
         window !== undefined ? () => window().document.body : undefined
 
     return (
-        <Box sx={{ display: "flex" }}>
+        <>
             <AppBar component="nav" elevation={0}>
                 <Container maxWidth="lg">
                     <Toolbar>
@@ -112,9 +113,8 @@ function Header(props) {
                             </Typography>
                         </Link>
 
-                        {/* search icon start */}
                         <SearchInput />
-                        {/* search icon end */}
+
                         <Box sx={{ flexGrow: 1 }} />
                         <Box
                             sx={{
@@ -182,6 +182,7 @@ function Header(props) {
                     </Toolbar>
                 </Container>
             </AppBar>
+
             <Box component="nav">
                 <Drawer
                     container={container}
@@ -202,7 +203,7 @@ function Header(props) {
                     {drawer}
                 </Drawer>
             </Box>
-        </Box>
+        </>
     )
 }
 

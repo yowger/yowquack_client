@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom"
 import Login from "./features/auth/pages/Login"
 import Feed from "./features/feed/pages/Feed"
-import SocialLayout from "./components/layouts/social/SocialLayout"
+import SocialLayout from "./components/layouts/SocialLayout"
 import Profile from "./features/profile/pages/Profile"
 import SinglePost from "./features/feed/pages/SinglePost"
 import Register from "./features/auth/pages/Register"

@@ -1,7 +1,7 @@
 import { useTheme } from "@mui/material/styles"
 import useMediaQuery from "@mui/material/useMediaQuery"
 import Grid from "@mui/material/Grid"
-import PostComposer from "../components/PostComposer"
+import PostComposer from "../../../components/profile/PostComposer"
 import Post from "../../../components/post/Post"
 import Sidebar from "../../../components/layouts/social/Sidebar"
 import PostWrapper from "../../../components/posts/PostWrapper"

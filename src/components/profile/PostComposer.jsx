@@ -5,9 +5,9 @@ import Button from "@mui/material/Button"
 import Typography from "@mui/material/Typography"
 import IconButton from "@mui/material/IconButton"
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto"
-import EmojiMenu from "../../../components/posts/EmojiMenu"
-import StyledPaper from "../../../components/common/StyledPaper"
-import PreviewImage from "../../../components/form/PreviewImage"
+import EmojiMenu from "../posts/EmojiMenu"
+import StyledPaper from "../common/StyledPaper"
+import PreviewImage from "../form/PreviewImage"
 import CircularProgress from "@mui/material/CircularProgress"
 
 // future# , useHook for reusability,
