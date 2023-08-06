@@ -60,8 +60,7 @@ function Feed() {
 
                     {isPostLoading ? (
                         <p>loading posts...</p>
-                    ) : (
-                        postApiData &&
+                    ) : postApiData ? (
                         postApiData.data.posts.map((post, index) => {
                             return (
                                 <Post
@@ -78,6 +77,8 @@ function Feed() {
                                 />
                             )
                         })
+                    ) : (
+                        <p>No post available at this time.</p>
                     )}
                 </PostWrapper>
             </Grid>
