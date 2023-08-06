@@ -22,9 +22,9 @@ function Feed() {
     const {
         data: postApiData,
         isLoading: isPostLoading,
-        isSuccess: isPostSuccess,
-        isError: isPostError,
-        error: postError,
+        // isSuccess: isPostSuccess,
+        // isError: isPostError,
+        // error: postError,
     } = useGetPostQuery({ page })
 
     const [
@@ -32,8 +32,8 @@ function Feed() {
         {
             isLoading: sendPostIsLoading,
             isSuccess: sendPostIsSuccess,
-            isError: sendPostIsError,
-            error: sendPostError,
+            // isError: sendPostIsError,
+            // error: sendPostError,
         },
     ] = useSendPostMutation()
 
