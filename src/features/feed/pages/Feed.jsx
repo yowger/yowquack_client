@@ -3,7 +3,7 @@ import useMediaQuery from "@mui/material/useMediaQuery"
 import Grid from "@mui/material/Grid"
 import PostComposer from "../../../components/profile/PostComposer"
 import Post from "../../../components/post/Post"
-import Sidebar from "../../../components/layouts/social/Sidebar"
+// import Sidebar from "../../../components/layouts/sidebar/Sidebar"
 import PostWrapper from "../../../components/posts/PostWrapper"
 import { useGetPostQuery, useSendPostMutation } from "../slices/postApiSlice"
 import { useState } from "react"
@@ -88,7 +88,7 @@ function Feed() {
                 md={4}
                 sx={{ display: isMediumScreenAndBelow && "none" }}
             >
-                <Sidebar />
+                {/* <Sidebar /> */}
             </Grid>
         </Grid>
     )

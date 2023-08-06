@@ -10,19 +10,6 @@ import StatInfo from "../../../components/profile/StatInfo"
 import PostWrapper from "../../../components/posts/PostWrapper"
 import { useGetPostQuery } from "../../feed/slices/postApiSlice"
 
-const followers = [
-    { name: "Roger Pantil" },
-    { name: "Naruto Uzumaki" },
-    { name: "Sasuke Uchiha" },
-    { name: "Buroto Uzumaki" },
-]
-
-const following = [
-    { name: "Choi Kyu" },
-    { name: "Kim Chu" },
-    { name: "Kimberly Aneston" },
-]
-
 function Profile() {
     // const theme = useTheme()
     // const isMediumScreenAndBelow = useMediaQuery(theme.breakpoints.down("md"))
