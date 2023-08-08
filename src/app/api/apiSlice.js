@@ -3,45 +3,45 @@ import { logOut, setCredentials } from "../../features/auth/slices/authSlice"
 
 const baseQuery = fetchBaseQuery({
     baseUrl: "http://localhost:7001",
-    // credentials: "include",
-    // prepareHeaders: (headers, { getState }) => {
-    //     const token = getState().auth.token
+    credentials: "include",
+    prepareHeaders: (headers, { getState }) => {
+        const token = getState().auth.token
 
-    //     if (token) {
-    //         headers.set("authorization", `Bearer ${token}`)
-    //     }
+        if (token) {
+            headers.set("authorization", `Bearer ${token}`)
+        }
 
-    //     return headers
-    // },
+        return headers
+    },
 })
 
 const baseQueryWithReauth = async (args, api, options) => {
-    // console.log("retrying")
+    console.log("args", args)
+    const HTTP_STATUS_UNAUTHORIZED = 401
+
     let result = await baseQuery(args, api, options)
-    // // console.log(
-    // //     "🚀 ~ file: apiSlice.js:20 ~ baseQueryWithReauth ~ result:",
-    // //     result
-    // // )
+    const status = result?.data?.error?.originalStatus
 
-    // const jwtExpired = result?.error?.originalStatus === 401
+    if (status === HTTP_STATUS_UNAUTHORIZED) {
+        console.log("refresh token")
 
-    // if (jwtExpired) {
-    //     const refreshResult = await baseQuery(
-    //         "/auth/refresh_token",
-    //         api,
-    //         options
-    //     )
+        const refreshResult = await baseQuery(
+            "v1/auth/refresh_token",
+            api,
+            options
+        )
+        console.log("refresh Result", refreshResult)
 
-    //     if (refreshResult?.data) {
-    //         const user = api.getState().auth.user
+        if (refreshResult?.data) {
+            const user = api.getState().auth.user
 
-    //         api.dispatch(setCredentials({ ...refreshResult.data, user }))
+            api.dispatch(setCredentials({ ...refreshResult.data, user }))
 
-    //         result = await baseQuery(args, api, options)
-    //     } else {
-    //         api.dispatch(logOut())
-    //     }
-    // }
+            result = await baseQuery(args, api, options)
+        } else {
+            api.dispatch(logOut())
+        }
+    }
 
     return result
 }

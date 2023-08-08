@@ -7,6 +7,7 @@ import Post from "../../../components/post/Post"
 import PostWrapper from "../../../components/posts/PostWrapper"
 import { useGetPostQuery, useSendPostMutation } from "../slices/postApiSlice"
 import { useState } from "react"
+import useAuth from "../../../hooks/useAuth"
 
 // todo future, put observer last element -3
 // redo scrolling
@@ -15,6 +16,7 @@ import { useState } from "react"
 // https://tanstack.com/virtual/v3
 
 function Feed() {
+    const { isUser } = useAuth()
     const theme = useTheme()
     const isMediumScreenAndBelow = useMediaQuery(theme.breakpoints.down("md"))
     const [page, setpage] = useState(1)
@@ -52,11 +54,13 @@ function Feed() {
         <Grid container>
             <Grid item xs={12} md={8}>
                 <PostWrapper>
-                    <PostComposer
-                        onClick={handleClickPost}
-                        isLoading={sendPostIsLoading}
-                        isSuccess={sendPostIsSuccess}
-                    />
+                    {isUser && (
+                        <PostComposer
+                            onClick={handleClickPost}
+                            isLoading={sendPostIsLoading}
+                            isSuccess={sendPostIsSuccess}
+                        />
+                    )}
 
                     {isPostLoading ? (
                         <p>loading posts...</p>

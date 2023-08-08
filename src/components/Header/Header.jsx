@@ -5,7 +5,6 @@ import PropTypes from "prop-types"
 import AppBar from "@mui/material/AppBar"
 import Box from "@mui/material/Box"
 import Divider from "@mui/material/Divider"
-import Drawer from "@mui/material/Drawer"
 import Container from "@mui/material/Container"
 import IconButton from "@mui/material/IconButton"
 import List from "@mui/material/List"
@@ -15,18 +14,21 @@ import ListItemText from "@mui/material/ListItemText"
 import MenuIcon from "@mui/icons-material/Menu"
 import Toolbar from "@mui/material/Toolbar"
 import Typography from "@mui/material/Typography"
-import Badge from "@mui/material/Badge"
 import Tooltip from "@mui/material/Tooltip"
 import Avatar from "@mui/material/Avatar"
-import Menu from "@mui/material/Menu"
-import MenuItem from "@mui/material/MenuItem"
-import MailIcon from "@mui/icons-material/Mail"
-import NotificationsIcon from "@mui/icons-material/Notifications"
+import useAuth from "../../hooks/useAuth"
+import Logo from "../common/Logo"
+import UserNotifications from "./UserNotifications"
+import UserMenu from "./UserMenu"
+import UserDrawer from "./UserDrawer"
+import Button from "@mui/material/Button"
+import { ListItemIcon } from "@mui/material"
 
 const drawerWidth = 240
 const navItems = ["Home", "About", "Contact"]
 
 function Header(props) {
+    const { avatar, name, isUser } = useAuth()
     const navigate = useNavigate()
     const { window } = props
 
@@ -55,8 +57,14 @@ function Header(props) {
     }
 
     const settings = [
-        { label: "Profile", event: handleClickProfileItem },
-        { label: "Log out", event: handleClickLogOutItem },
+        {
+            menuItem: <ListItemText>Profile</ListItemText>,
+            event: handleClickProfileItem,
+        },
+        {
+            menuItem: <ListItemText>Log out</ListItemText>,
+            event: handleClickLogOutItem,
+        },
     ]
 
     const drawer = (
@@ -95,114 +103,51 @@ function Header(props) {
                             <MenuIcon />
                         </IconButton>
 
-                        <Link
-                            to="/"
-                            style={{ textDecoration: "none", color: "unset" }}
-                        >
-                            <Typography
-                                variant="h6"
-                                component="div"
-                                sx={{
-                                    display: {
-                                        xs: "none",
-                                        sm: "block",
-                                    },
-                                }}
-                            >
-                                QUACK
-                            </Typography>
-                        </Link>
+                        <Logo />
 
                         <SearchInput />
 
                         <Box sx={{ flexGrow: 1 }} />
-                        <Box
-                            sx={{
-                                flexGrow: 0,
-                                display: "flex",
-                            }}
-                        >
-                            <IconButton
-                                size="large"
-                                aria-label="show 4 new mails"
+
+                        {isUser ? (
+                            <>
+                                {/* <UserNotifications /> */}
+
+                                <Tooltip title="Open settings">
+                                    <IconButton onClick={handleOpenUserMenu}>
+                                        <Avatar
+                                            alt="profile picture"
+                                            src={avatar}
+                                        />
+                                    </IconButton>
+                                </Tooltip>
+
+                                <UserMenu
+                                    anchorElUser={anchorElUser}
+                                    handleCloseUserMenu={handleCloseUserMenu}
+                                    settings={settings}
+                                />
+                            </>
+                        ) : (
+                            <Button
+                                component={Link}
+                                to="/login"
                                 color="inherit"
                             >
-                                <Badge badgeContent={4} color="error">
-                                    <MailIcon />
-                                </Badge>
-                            </IconButton>
-
-                            <IconButton
-                                size="large"
-                                aria-label="show 17 new notifications"
-                                color="inherit"
-                            >
-                                <Badge badgeContent={17} color="error">
-                                    <NotificationsIcon />
-                                </Badge>
-                            </IconButton>
-
-                            <Tooltip title="Open settings">
-                                <IconButton onClick={handleOpenUserMenu}>
-                                    <Avatar
-                                        alt="Remy Sharp"
-                                        src="https://picsum.photos/200/200"
-                                    />
-                                </IconButton>
-                            </Tooltip>
-
-                            <Menu
-                                sx={{ mt: "45px" }}
-                                id="menu-appbar"
-                                anchorEl={anchorElUser}
-                                anchorOrigin={{
-                                    vertical: "top",
-                                    horizontal: "right",
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: "top",
-                                    horizontal: "right",
-                                }}
-                                open={Boolean(anchorElUser)}
-                                onClose={handleCloseUserMenu}
-                            >
-                                {settings.map((setting, index) => (
-                                    <MenuItem
-                                        key={index}
-                                        onClick={setting.event}
-                                    >
-                                        <Typography textAlign="center">
-                                            {setting.label}
-                                        </Typography>
-                                    </MenuItem>
-                                ))}
-                            </Menu>
-                        </Box>
+                                Login
+                            </Button>
+                        )}
                     </Toolbar>
                 </Container>
             </AppBar>
 
-            <Box component="nav">
-                <Drawer
-                    container={container}
-                    variant="temporary"
-                    open={mobileOpen}
-                    onClose={handleDrawerToggle}
-                    ModalProps={{
-                        keepMounted: true,
-                    }}
-                    sx={{
-                        display: { xs: "block", sm: "none" },
-                        "& .MuiDrawer-paper": {
-                            boxSizing: "border-box",
-                            width: drawerWidth,
-                        },
-                    }}
-                >
-                    {drawer}
-                </Drawer>
-            </Box>
+            <UserDrawer
+                container={container}
+                mobileOpen={mobileOpen}
+                handleDrawerToggle={handleDrawerToggle}
+                drawerWidth={drawerWidth}
+                drawer={drawer}
+            />
         </>
     )
 }

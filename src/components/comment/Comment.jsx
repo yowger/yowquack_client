@@ -24,7 +24,7 @@ import CommentDialog from "./CommentDialog"
 import CommentMenu from "./CommenMenu"
 
 const Comment = ({ id, author, content, image, createdAt }) => {
-    const avatarUrl = author.avatar?.url || {}
+    const avatarUrl = author.avatar?.url || ""
     const [menuAnchorEl, setMenuAnchorEl] = useState(null)
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
 

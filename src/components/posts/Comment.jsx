@@ -21,7 +21,8 @@ import {
 } from "@mui/material"
 import { useDeleteCommentMutation } from "../../features/feed/slices/postApiSlice"
 
-const Comment = ({ id, author, content, image, createdAt }) => {
+function Comment({ id, author, content, image, createdAt }) {
+    console.log("author comment", author)
     const [menuAnchorEl, setMenuAnchorEl] = useState(null)
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
 

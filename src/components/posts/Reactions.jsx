@@ -29,6 +29,7 @@ const Reactions = ({ reactions }) => {
                         }}
                     >
                         <Typography
+                            component="span"
                             sx={{ display: "inline", mr: 0.2, fontSize: 18 }}
                         >
                             {emoticons[type]}

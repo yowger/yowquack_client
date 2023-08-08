@@ -9,8 +9,10 @@ import { Link } from "react-router-dom"
 import StatInfo from "../../../components/profile/StatInfo"
 import PostWrapper from "../../../components/posts/PostWrapper"
 import { useGetPostQuery } from "../../feed/slices/postApiSlice"
+import useAuth from "../../../hooks/useAuth"
 
 function Profile() {
+    const { isUser } = useAuth()
     // const theme = useTheme()
     // const isMediumScreenAndBelow = useMediaQuery(theme.breakpoints.down("md"))
     const [page, setpage] = useState(1)
@@ -40,7 +42,7 @@ function Profile() {
                     </Box>
 
                     <PostWrapper>
-                        <PostComposer />
+                        {isUser && <PostComposer />}
 
                         {isPostLoading ? (
                             <p>loading posts...</p>
