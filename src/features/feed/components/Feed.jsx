@@ -54,13 +54,11 @@ function Feed() {
         <Grid container>
             <Grid item xs={12} md={8}>
                 <PostWrapper>
-                    {isUser && (
-                        <PostComposer
-                            onClick={handleClickPost}
-                            isLoading={sendPostIsLoading}
-                            isSuccess={sendPostIsSuccess}
-                        />
-                    )}
+                    <PostComposer
+                        onClick={handleClickPost}
+                        isLoading={sendPostIsLoading}
+                        isSuccess={sendPostIsSuccess}
+                    />
 
                     {isPostLoading ? (
                         <p>loading posts...</p>
